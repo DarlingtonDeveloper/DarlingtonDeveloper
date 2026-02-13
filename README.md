@@ -1,14 +1,38 @@
 # Hey, I'm Mike 👋
 
-Building systems that think. Currently obsessed with agentic orchestration.
+Building systems that think. Currently deep in agentic orchestration and autonomous infrastructure.
 
-## What I'm Working On
+## Core Infrastructure
 
-🏗️ **[Darlington](https://darlington.dev)** — Personal OS. Habits, health, finance, calendar — all in one dashboard. Next.js 15 + Supabase.
+**[Darlington](https://darlington.dev)** — Personal OS. Habits, health, finance, Mandarin practice, calendar — all in one dashboard. Next.js 15 + Supabase.
 
-🤖 **[MissionControl](https://github.com/DarlingtonDeveloper/MissionControl)** — Agentic orchestration system. Go backend, 6-phase workflow gates, multi-agent coordination.
+**[MissionControl](https://github.com/DarlingtonDeveloper/MissionControl)** — 10-stage agentic orchestration system. Go + Rust core, WebSocket hub, OpenClaw bridge.
 
-🦊 **Kai** — My AI assistant running 24/7 on a dedicated Linux box. WhatsApp-connected, memory-persistent, and increasingly opinionated.
+**[Warren](https://github.com/DarlingtonDeveloper/Warren)** — Go reverse proxy managing AI agents in Docker Swarm. Hostname routing, lifecycle policies, wake-on-demand.
+
+## Swarm Services
+
+**[Alexandria](https://github.com/DarlingtonDeveloper/Alexandria)** — Persistent knowledge layer. Secrets management, semantic search, knowledge graph, access control. Go + pgvector.
+
+**[PromptForge](https://github.com/DarlingtonDeveloper/PromptForge)** — Centralised prompt lifecycle management. Registry, VCS, composition engine, subscriptions. Python/FastAPI.
+
+**[Dispatch](https://github.com/DarlingtonDeveloper/Dispatch)** — Task broker and work scheduler. Capability matching, owner-scoped assignment, NATS delivery. Go.
+
+**[Context Graph](https://github.com/DarlingtonDeveloper/context-graph)** — Knowledge graph with identity resolution, semantic clustering, entity merging. Go.
+
+## Agents
+
+🦊 **Kai** — King of the swarm. Orchestrates work, reviews output, runs 24/7 on dedicated hardware.
+
+🌸 **Lily** — Conversational PA. WhatsApp + Slack connected.
+
+🔭 **Scout** — Research specialist. Web search, analysis, structured reports.
+
+⚒️ **Celebrimbor** — The PromptArchitect. Designs and refines agent personas.
+
+## Apps
+
+**[OpenGlass](https://github.com/DarlingtonDeveloper/OpenGlass)** — Swift iOS app connecting Meta Ray-Ban glasses to Gemini Live + OpenClaw.
 
 ## The Philosophy
 
@@ -16,9 +40,9 @@ Building systems that think. Currently obsessed with agentic orchestration.
 
 Solve your own problems. Ship them publicly. Let volume beat perfection.
 
-## Tech I Use
+## Tech
 
-`TypeScript` `Go` `Python` `Next.js` `React` `Supabase` `Docker` `Node.js`
+`TypeScript` `Go` `Rust` `Python` `Swift` `Next.js` `React` `Supabase` `Docker` `NATS` `Node.js`
 
 ## Stats
 
