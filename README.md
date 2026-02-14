@@ -5,158 +5,92 @@ Building autonomous AI infrastructure. Currently running a swarm of AI agents th
 ## The Swarm
 
 ```mermaid
-graph TB
-    subgraph Humans["👥 Humans"]
-        MikeD["Mike D"]
-        MikeA["Mike A"]
+graph LR
+    subgraph Input
+        WhatsApp
+        Slack
+        Web["Web Chat"]
+        CC["Claude Code"]
     end
 
-    subgraph Surfaces["💬 Surfaces"]
-        WA["WhatsApp"]
-        Slack["Slack"]
-        Web["darlington.dev"]
-        CLI["Claude Code"]
+    subgraph Core
+        Gateway["OpenClaw Gateway"]
+        NATS["Hermes (NATS)"]
     end
 
-    subgraph Gateway["🚪 Gateway Layer"]
-        OC["OpenClaw Gateway"]
-        SF["Slack Gateway"]
-        Sidecar["CC Sidecar"]
-    end
-
-    subgraph Agents["🤖 Agents"]
+    subgraph Agents
         Kai["🦊 Kai — King"]
         Lily["🌸 Lily — PA"]
         Scout["🔭 Scout — Research"]
-        Celebrimbor["⚒️ Celebrimbor — PromptArchitect"]
-        DutyBound["⚔️ DutyBound — Developer"]
         Dredd["⚖️ Dredd — Judge"]
     end
 
-    subgraph Infra["⚙️ Infrastructure"]
-        Warren["Warren — Agent Manager"]
-        Dispatch["Dispatch — Task Broker"]
-        Hermes["Hermes — NATS Message Bus"]
-        Alexandria["Alexandria — Knowledge Layer"]
-        PromptForge["PromptForge — Prompt Registry"]
-        Chronicle["Chronicle — Observability"]
-        MC["MissionControl — Orchestration"]
+    subgraph Learn
+        Chronicle["Chronicle"]
+        Decisions["Decision Engine"]
+        Trust["Trust Scores"]
     end
 
-    subgraph Data["💾 Data"]
-        Supabase["Supabase"]
-        DecisionEngine["Decision Engine"]
-        TrustScores["Trust Scores"]
-    end
-
-    MikeD --> WA & Slack & Web & CLI
-    MikeA --> WA & Slack
-
-    WA & Web --> OC
-    Slack --> SF --> OC
-    CLI --> Sidecar
-
-    OC --> Kai & Lily & Scout
-    OC --> Hermes
-
-    Kai --> MC
-    Kai --> Dispatch
-    Dispatch --> Warren
-    Warren --> DutyBound & Scout & Celebrimbor
-
-    Sidecar --> Hermes
-    Hermes --> Chronicle
-    Chronicle --> Dredd
-    Dredd --> DecisionEngine
-    Dredd --> TrustScores
-    Dredd --> Slack
-
-    TrustScores --> Dispatch
-    Celebrimbor --> PromptForge
-    PromptForge --> Agents
-    Alexandria --> Agents
-
-    Dredd --> Alexandria
-
-    DecisionEngine --> Supabase
-    TrustScores --> Supabase
-    Chronicle --> Supabase
-    Alexandria --> Supabase
+    Input --> Gateway --> Agents
+    Gateway --> NATS --> Chronicle --> Dredd
+    Dredd --> Decisions --> Trust
+    Trust --> |"feeds back"| Agents
 
     style Kai fill:#f59e0b,stroke:#d97706,color:#000
     style Dredd fill:#ef4444,stroke:#dc2626,color:#fff
-    style Hermes fill:#8b5cf6,stroke:#7c3aed,color:#fff
-    style Warren fill:#3b82f6,stroke:#2563eb,color:#fff
-    style Dispatch fill:#10b981,stroke:#059669,color:#fff
+    style NATS fill:#8b5cf6,stroke:#7c3aed,color:#fff
 ```
 
-## Infrastructure
+**How it works:** Messages come in from any surface → agents respond → every conversation flows through NATS to Chronicle → Dredd extracts decisions → trust scores build up → agents get better over time. The goal is autonomy.
 
-| Service | What it does | Stack | Repo |
-|---------|-------------|-------|------|
-| **[Warren](https://github.com/MikeSquared-Agency/Warren)** | Reverse proxy managing agents in Docker Swarm. Hostname routing, lifecycle policies, wake-on-demand. | Go | [→](https://github.com/MikeSquared-Agency/Warren) |
-| **[Dispatch](https://github.com/MikeSquared-Agency/Dispatch)** | Task broker. 11-factor scoring, capability matching, owner-scoped assignment, NATS delivery. | Go | [→](https://github.com/MikeSquared-Agency/Dispatch) |
-| **[Alexandria](https://github.com/MikeSquared-Agency/Alexandria)** | Knowledge layer. Secrets vault, semantic search, knowledge graph, context endpoint, access control. | Go + pgvector | [→](https://github.com/MikeSquared-Agency/Alexandria) |
-| **[PromptForge](https://github.com/MikeSquared-Agency/PromptForge)** | Prompt lifecycle management. Registry, versioning, branching, subscriptions, composition engine. | Python/FastAPI | [→](https://github.com/MikeSquared-Agency/PromptForge) |
-| **[Chronicle](https://github.com/MikeSquared-Agency/Chronicle)** | Observability. NATS event consumer, transcript storage, DLQ alerts, batch writes to Supabase. | Go | [→](https://github.com/MikeSquared-Agency/Chronicle) |
-| **[MissionControl](https://github.com/MikeSquared-Agency/MissionControl)** | 10-stage agentic orchestration. Gate validation, worker tracking, WebSocket hub, OpenClaw bridge. | Go + Rust | [→](https://github.com/MikeSquared-Agency/MissionControl) |
-| **[Hermes](https://github.com/MikeSquared-Agency/swarm-dlq)** | NATS + JetStream message bus. Pub/sub, durable streams, inter-agent coordination. | NATS 2.12 | — |
-| **[Slack Gateway](https://github.com/MikeSquared-Agency/slack-gateway)** | Routes Slack events into OpenClaw gateway sessions. Socket Mode, workspace routing. | Go | [→](https://github.com/MikeSquared-Agency/slack-gateway) |
-| **[Gateway NATS Hook](https://github.com/MikeSquared-Agency/gateway-nats-hook)** | OpenClaw hook publishing session transcript chunks to NATS for the decision pipeline. | TypeScript | [→](https://github.com/MikeSquared-Agency/gateway-nats-hook) |
-| **[CC Sidecar](https://github.com/MikeSquared-Agency/cc-sidecar)** | Watches Claude Code JSONL transcripts, publishes session events to NATS. | Go | [→](https://github.com/MikeSquared-Agency/cc-sidecar) |
-| **[Dredd](https://github.com/MikeSquared-Agency/dredd)** | The Judge. Extracts decisions and reasoning patterns from transcripts. Feeds trust scores and prompt evolution. | Go | [→](https://github.com/MikeSquared-Agency/dredd) |
+## Services
+
+| Service | Purpose | Repo |
+|---------|---------|------|
+| **Warren** | Agent lifecycle manager (Docker Swarm) | [Go](https://github.com/MikeSquared-Agency/Warren) |
+| **Dispatch** | Task broker — 11-factor scoring, NATS delivery | [Go](https://github.com/MikeSquared-Agency/Dispatch) |
+| **Alexandria** | Knowledge layer — secrets, semantic search, context | [Go](https://github.com/MikeSquared-Agency/Alexandria) |
+| **PromptForge** | Prompt registry — versioning, branching, subscriptions | [Python](https://github.com/MikeSquared-Agency/PromptForge) |
+| **Chronicle** | Observability — transcript storage, DLQ alerts | [Go](https://github.com/MikeSquared-Agency/Chronicle) |
+| **MissionControl** | 10-stage orchestration — gates, workers, audit trail | [Go + Rust](https://github.com/MikeSquared-Agency/MissionControl) |
+| **Dredd** | The Judge — extracts decisions, builds trust scores | [Go](https://github.com/MikeSquared-Agency/dredd) |
+| **CC Sidecar** | Watches Claude Code sessions, publishes to NATS | [Go](https://github.com/MikeSquared-Agency/cc-sidecar) |
 
 ## Agents
 
-| Agent | Role | Always-on |
-|-------|------|-----------|
-| 🦊 **Kai** | King of the swarm. Orchestrates work, reviews output, thinks architecturally. | ✅ Bare metal |
-| 🌸 **Lily** | PA for Mike A. Conversational, Slack + WhatsApp. | ✅ Container |
-| 🔭 **Scout** | Research specialist. Web search, analysis, structured reports. | ✅ Container |
-| ⚒️ **Celebrimbor** | The PromptArchitect. Designs and evolves agent personas via PromptForge. | ✅ Container |
-| ⚔️ **DutyBound** | Developer agent. Spawned as sub-agent for code tasks. | On-demand |
-| ⚖️ **Dredd** | The Judge. Processes transcripts, extracts decisions, builds trust scores. | ✅ Container |
-
-## The Decision Pipeline
-
-```mermaid
-graph LR
-    A["Conversation happens"] --> B["Chronicle stores transcript"]
-    B --> C["Dredd extracts decisions"]
-    C --> D["Posts to Slack #decisions"]
-    D --> E["Human reacts 👍/👎"]
-    E --> F["Trust scores update"]
-    E --> G["Prompts evolve"]
-    E --> H["Dispatch adjusts scoring"]
-    F & G & H --> I["System behaviour changes"]
-    I --> J["Less human involvement"]
-    J --> K["Autonomy"]
-```
+| Agent | Role |
+|-------|------|
+| 🦊 **Kai** | King. Orchestrates work, thinks architecturally. Always-on, bare metal. |
+| 🌸 **Lily** | PA. Conversational, WhatsApp + Slack. |
+| 🔭 **Scout** | Research specialist. Web search, structured reports. |
+| ⚒️ **Celebrimbor** | PromptArchitect. Designs and evolves agent personas. |
+| ⚔️ **DutyBound** | Developer. Spawned on-demand for code tasks. |
+| ⚖️ **Dredd** | Judge. Extracts decisions from transcripts, feeds trust loop. |
 
 ## Apps
 
-**[Darlington](https://darlington.dev)** — Personal OS. Habits, health, finance, Mandarin practice, calendar, Kai chat, MC dashboard. Next.js 15 + Supabase.
+**[Darlington](https://darlington.dev)** — Personal OS. Habits, health, finance, Mandarin, calendar, Kai chat. Next.js 15 + Supabase.
 
-**[OpenGlass](https://github.com/DarlingtonDeveloper/OpenGlass)** — Swift iOS app connecting Meta Ray-Ban glasses to Gemini Live + OpenClaw. 6 modes, real-time AI companion.
+**[OpenGlass](https://github.com/DarlingtonDeveloper/OpenGlass)** — iOS app connecting Meta Ray-Ban glasses to Gemini Live + OpenClaw.
 
-## The Philosophy
+## Philosophy
 
-**10,000 iterations, not 10,000 hours.** Ship → learn → repeat.
-
-Solve your own problems. Ship them publicly. Let volume beat perfection.
-
-Every decision is training data. Every conversation teaches the swarm. The goal is agents that think like you — then surpass you.
+**10,000 iterations, not 10,000 hours.** Every decision is training data. Every conversation teaches the swarm.
 
 ## Tech
 
-`TypeScript` `Go` `Rust` `Python` `Swift` `Next.js` `React` `Supabase` `Docker Swarm` `NATS` `pgvector` `Node.js`
+`Go` `TypeScript` `Rust` `Python` `Swift` `Next.js` `Supabase` `Docker Swarm` `NATS` `pgvector`
 
-## Stats
+---
 
-![GitHub stats](https://github-readme-stats.vercel.app/api?username=DarlingtonDeveloper&show_icons=true&theme=tokyonight&hide_border=true&count_private=true)
+<p align="center">
+  <img src="https://github-readme-stats.vercel.app/api?username=DarlingtonDeveloper&show_icons=true&theme=tokyonight&hide_border=true&count_private=true" alt="GitHub stats" />
+</p>
 
-![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=DarlingtonDeveloper&layout=compact&theme=tokyonight&hide_border=true)
+<p align="center">
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=DarlingtonDeveloper&layout=compact&theme=tokyonight&hide_border=true&langs_count=8" alt="Top languages" />
+</p>
 
-## Find Me
-
-🌐 [darlington.dev](https://darlington.dev) · 🐦 [@mikedarlington_](https://twitter.com/mikedarlington_)
+<p align="center">
+  🌐 <a href="https://darlington.dev">darlington.dev</a>
+</p>
