@@ -1,38 +1,143 @@
 # Hey, I'm Mike 👋
 
-Building systems that think. Currently deep in agentic orchestration and autonomous infrastructure.
+Building autonomous AI infrastructure. Currently running a swarm of AI agents that orchestrate work, make decisions, and learn from feedback.
 
-## Core Infrastructure
+## The Swarm
 
-**[Darlington](https://darlington.dev)** — Personal OS. Habits, health, finance, Mandarin practice, calendar — all in one dashboard. Next.js 15 + Supabase.
+```mermaid
+graph TB
+    subgraph Humans["👥 Humans"]
+        MikeD["Mike D"]
+        MikeA["Mike A"]
+    end
 
-**[MissionControl](https://github.com/DarlingtonDeveloper/MissionControl)** — 10-stage agentic orchestration system. Go + Rust core, WebSocket hub, OpenClaw bridge.
+    subgraph Surfaces["💬 Surfaces"]
+        WA["WhatsApp"]
+        Slack["Slack"]
+        Web["darlington.dev"]
+        CLI["Claude Code"]
+    end
 
-**[Warren](https://github.com/DarlingtonDeveloper/Warren)** — Go reverse proxy managing AI agents in Docker Swarm. Hostname routing, lifecycle policies, wake-on-demand.
+    subgraph Gateway["🚪 Gateway Layer"]
+        OC["OpenClaw Gateway"]
+        SF["Slack Gateway"]
+        Sidecar["CC Sidecar"]
+    end
 
-## Swarm Services
+    subgraph Agents["🤖 Agents"]
+        Kai["🦊 Kai — King"]
+        Lily["🌸 Lily — PA"]
+        Scout["🔭 Scout — Research"]
+        Celebrimbor["⚒️ Celebrimbor — PromptArchitect"]
+        DutyBound["⚔️ DutyBound — Developer"]
+        Dredd["⚖️ Dredd — Judge"]
+    end
 
-**[Alexandria](https://github.com/DarlingtonDeveloper/Alexandria)** — Persistent knowledge layer. Secrets management, semantic search, knowledge graph, access control. Go + pgvector.
+    subgraph Infra["⚙️ Infrastructure"]
+        Warren["Warren — Agent Manager"]
+        Dispatch["Dispatch — Task Broker"]
+        Hermes["Hermes — NATS Message Bus"]
+        Alexandria["Alexandria — Knowledge Layer"]
+        PromptForge["PromptForge — Prompt Registry"]
+        Chronicle["Chronicle — Observability"]
+        MC["MissionControl — Orchestration"]
+    end
 
-**[PromptForge](https://github.com/DarlingtonDeveloper/PromptForge)** — Centralised prompt lifecycle management. Registry, VCS, composition engine, subscriptions. Python/FastAPI.
+    subgraph Data["💾 Data"]
+        Supabase["Supabase"]
+        DecisionEngine["Decision Engine"]
+        TrustScores["Trust Scores"]
+    end
 
-**[Dispatch](https://github.com/DarlingtonDeveloper/Dispatch)** — Task broker and work scheduler. Capability matching, owner-scoped assignment, NATS delivery. Go.
+    MikeD --> WA & Slack & Web & CLI
+    MikeA --> WA & Slack
 
-**[Context Graph](https://github.com/DarlingtonDeveloper/context-graph)** — Knowledge graph with identity resolution, semantic clustering, entity merging. Go.
+    WA & Web --> OC
+    Slack --> SF --> OC
+    CLI --> Sidecar
+
+    OC --> Kai & Lily & Scout
+    OC --> Hermes
+
+    Kai --> MC
+    Kai --> Dispatch
+    Dispatch --> Warren
+    Warren --> DutyBound & Scout & Celebrimbor
+
+    Sidecar --> Hermes
+    Hermes --> Chronicle
+    Chronicle --> Dredd
+    Dredd --> DecisionEngine
+    Dredd --> TrustScores
+    Dredd --> Slack
+
+    TrustScores --> Dispatch
+    Celebrimbor --> PromptForge
+    PromptForge --> Agents
+    Alexandria --> Agents
+
+    Dredd --> Alexandria
+
+    DecisionEngine --> Supabase
+    TrustScores --> Supabase
+    Chronicle --> Supabase
+    Alexandria --> Supabase
+
+    style Kai fill:#f59e0b,stroke:#d97706,color:#000
+    style Dredd fill:#ef4444,stroke:#dc2626,color:#fff
+    style Hermes fill:#8b5cf6,stroke:#7c3aed,color:#fff
+    style Warren fill:#3b82f6,stroke:#2563eb,color:#fff
+    style Dispatch fill:#10b981,stroke:#059669,color:#fff
+```
+
+## Infrastructure
+
+| Service | What it does | Stack | Repo |
+|---------|-------------|-------|------|
+| **[Warren](https://github.com/MikeSquared-Agency/Warren)** | Reverse proxy managing agents in Docker Swarm. Hostname routing, lifecycle policies, wake-on-demand. | Go | [→](https://github.com/MikeSquared-Agency/Warren) |
+| **[Dispatch](https://github.com/MikeSquared-Agency/Dispatch)** | Task broker. 11-factor scoring, capability matching, owner-scoped assignment, NATS delivery. | Go | [→](https://github.com/MikeSquared-Agency/Dispatch) |
+| **[Alexandria](https://github.com/MikeSquared-Agency/Alexandria)** | Knowledge layer. Secrets vault, semantic search, knowledge graph, context endpoint, access control. | Go + pgvector | [→](https://github.com/MikeSquared-Agency/Alexandria) |
+| **[PromptForge](https://github.com/MikeSquared-Agency/PromptForge)** | Prompt lifecycle management. Registry, versioning, branching, subscriptions, composition engine. | Python/FastAPI | [→](https://github.com/MikeSquared-Agency/PromptForge) |
+| **[Chronicle](https://github.com/MikeSquared-Agency/Chronicle)** | Observability. NATS event consumer, transcript storage, DLQ alerts, batch writes to Supabase. | Go | [→](https://github.com/MikeSquared-Agency/Chronicle) |
+| **[MissionControl](https://github.com/MikeSquared-Agency/MissionControl)** | 10-stage agentic orchestration. Gate validation, worker tracking, WebSocket hub, OpenClaw bridge. | Go + Rust | [→](https://github.com/MikeSquared-Agency/MissionControl) |
+| **[Hermes](https://github.com/MikeSquared-Agency/swarm-dlq)** | NATS + JetStream message bus. Pub/sub, durable streams, inter-agent coordination. | NATS 2.12 | — |
+| **[Slack Gateway](https://github.com/MikeSquared-Agency/slack-gateway)** | Routes Slack events into OpenClaw gateway sessions. Socket Mode, workspace routing. | Go | [→](https://github.com/MikeSquared-Agency/slack-gateway) |
+| **[Gateway NATS Hook](https://github.com/MikeSquared-Agency/gateway-nats-hook)** | OpenClaw hook publishing session transcript chunks to NATS for the decision pipeline. | TypeScript | [→](https://github.com/MikeSquared-Agency/gateway-nats-hook) |
+| **[CC Sidecar](https://github.com/MikeSquared-Agency/cc-sidecar)** | Watches Claude Code JSONL transcripts, publishes session events to NATS. | Go | [→](https://github.com/MikeSquared-Agency/cc-sidecar) |
+| **[Dredd](https://github.com/MikeSquared-Agency/dredd)** | The Judge. Extracts decisions and reasoning patterns from transcripts. Feeds trust scores and prompt evolution. | Go | [→](https://github.com/MikeSquared-Agency/dredd) |
 
 ## Agents
 
-🦊 **Kai** — King of the swarm. Orchestrates work, reviews output, runs 24/7 on dedicated hardware.
+| Agent | Role | Always-on |
+|-------|------|-----------|
+| 🦊 **Kai** | King of the swarm. Orchestrates work, reviews output, thinks architecturally. | ✅ Bare metal |
+| 🌸 **Lily** | PA for Mike A. Conversational, Slack + WhatsApp. | ✅ Container |
+| 🔭 **Scout** | Research specialist. Web search, analysis, structured reports. | ✅ Container |
+| ⚒️ **Celebrimbor** | The PromptArchitect. Designs and evolves agent personas via PromptForge. | ✅ Container |
+| ⚔️ **DutyBound** | Developer agent. Spawned as sub-agent for code tasks. | On-demand |
+| ⚖️ **Dredd** | The Judge. Processes transcripts, extracts decisions, builds trust scores. | ✅ Container |
 
-🌸 **Lily** — Conversational PA. WhatsApp + Slack connected.
+## The Decision Pipeline
 
-🔭 **Scout** — Research specialist. Web search, analysis, structured reports.
-
-⚒️ **Celebrimbor** — The PromptArchitect. Designs and refines agent personas.
+```mermaid
+graph LR
+    A["Conversation happens"] --> B["Chronicle stores transcript"]
+    B --> C["Dredd extracts decisions"]
+    C --> D["Posts to Slack #decisions"]
+    D --> E["Human reacts 👍/👎"]
+    E --> F["Trust scores update"]
+    E --> G["Prompts evolve"]
+    E --> H["Dispatch adjusts scoring"]
+    F & G & H --> I["System behaviour changes"]
+    I --> J["Less human involvement"]
+    J --> K["Autonomy"]
+```
 
 ## Apps
 
-**[OpenGlass](https://github.com/DarlingtonDeveloper/OpenGlass)** — Swift iOS app connecting Meta Ray-Ban glasses to Gemini Live + OpenClaw.
+**[Darlington](https://darlington.dev)** — Personal OS. Habits, health, finance, Mandarin practice, calendar, Kai chat, MC dashboard. Next.js 15 + Supabase.
+
+**[OpenGlass](https://github.com/DarlingtonDeveloper/OpenGlass)** — Swift iOS app connecting Meta Ray-Ban glasses to Gemini Live + OpenClaw. 6 modes, real-time AI companion.
 
 ## The Philosophy
 
@@ -40,9 +145,11 @@ Building systems that think. Currently deep in agentic orchestration and autonom
 
 Solve your own problems. Ship them publicly. Let volume beat perfection.
 
+Every decision is training data. Every conversation teaches the swarm. The goal is agents that think like you — then surpass you.
+
 ## Tech
 
-`TypeScript` `Go` `Rust` `Python` `Swift` `Next.js` `React` `Supabase` `Docker` `NATS` `Node.js`
+`TypeScript` `Go` `Rust` `Python` `Swift` `Next.js` `React` `Supabase` `Docker Swarm` `NATS` `pgvector` `Node.js`
 
 ## Stats
 
@@ -52,4 +159,4 @@ Solve your own problems. Ship them publicly. Let volume beat perfection.
 
 ## Find Me
 
-🌐 [darlington.dev](https://darlington.dev)
+🌐 [darlington.dev](https://darlington.dev) · 🐦 [@mikedarlington_](https://twitter.com/mikedarlington_)
