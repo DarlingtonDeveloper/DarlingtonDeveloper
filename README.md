@@ -5,83 +5,60 @@ Building autonomous AI infrastructure. Currently running a swarm of AI agents th
 ## The Swarm
 
 ```mermaid
-graph TB
-    subgraph Humans["👥 Humans"]
-        MikeD["Mike D"]
-        MikeA["Mike A"]
-    end
-
+graph LR
     subgraph Surfaces["💬 Surfaces"]
         WA["WhatsApp"]
         Slack["Slack"]
-        Web["darlington.dev"]
-        CLI["Claude Code"]
+        Web["Web Chat"]
+        CC["Claude Code"]
     end
 
-    subgraph Gateway["🚪 Gateway Layer"]
-        OC["OpenClaw Gateway"]
-        SF["Slack Gateway"]
+    subgraph Gateway["🚪 Gateway"]
+        OC["OpenClaw"]
+        Hook["NATS Hook"]
         Sidecar["CC Sidecar"]
     end
 
     subgraph Agents["🤖 Agents"]
-        Kai["🦊 Kai — King"]
-        Lily["🌸 Lily — PA"]
-        Scout["🔭 Scout — Research"]
-        Celebrimbor["⚒️ Celebrimbor — PromptArchitect"]
-        DutyBound["⚔️ DutyBound — Developer"]
-        Dredd["⚖️ Dredd — Judge"]
+        Kai["🦊 Kai"]
+        Lily["🌸 Lily"]
+        Scout["🔭 Scout"]
+        Celebrimbor["⚒️ Celebrimbor"]
+        DutyBound["⚔️ DutyBound"]
+        Dredd["⚖️ Dredd"]
     end
 
-    subgraph Infra["⚙️ Infrastructure"]
-        Warren["Warren — Agent Manager"]
-        Dispatch["Dispatch — Task Broker"]
-        Hermes["Hermes — NATS Message Bus"]
-        Alexandria["Alexandria — Knowledge Layer"]
-        PromptForge["PromptForge — Prompt Registry"]
-        Chronicle["Chronicle — Observability"]
-        MC["MissionControl — Orchestration"]
+    subgraph Bus["📡 Message Bus"]
+        Hermes["Hermes · NATS"]
     end
 
-    subgraph Data["💾 Data"]
-        Supabase["Supabase"]
-        DecisionEngine["Decision Engine"]
-        TrustScores["Trust Scores"]
+    subgraph Services["⚙️ Services"]
+        Warren["Warren · Agent Manager"]
+        Dispatch["Dispatch · Task Broker"]
+        Alexandria["Alexandria · Knowledge"]
+        PromptForge["PromptForge · Prompts"]
+        Chronicle["Chronicle · Observability"]
+        MC["MissionControl · Orchestration"]
     end
 
-    MikeD --> WA & Slack & Web & CLI
-    MikeA --> WA & Slack
+    WA & Slack & Web --> OC
+    CC --> Sidecar
 
-    WA & Web --> OC
-    Slack --> SF --> OC
-    CLI --> Sidecar
-
-    OC --> Kai & Lily & Scout
-    OC --> Hermes
-
-    Kai --> MC
-    Kai --> Dispatch
-    Dispatch --> Warren
-    Warren --> DutyBound & Scout & Celebrimbor
-
+    OC --> Agents
+    OC --> Hook --> Hermes
     Sidecar --> Hermes
+
     Hermes --> Chronicle
     Chronicle --> Dredd
-    Dredd --> DecisionEngine
-    Dredd --> TrustScores
-    Dredd --> Slack
 
-    TrustScores --> Dispatch
-    Celebrimbor --> PromptForge
-    PromptForge --> Agents
+    Dispatch --> Warren --> Agents
     Alexandria --> Agents
+    PromptForge --> Agents
+    Kai --> MC
+    Kai --> Dispatch
 
-    Dredd --> Alexandria
-
-    DecisionEngine --> Supabase
-    TrustScores --> Supabase
-    Chronicle --> Supabase
-    Alexandria --> Supabase
+    Dredd --> PromptForge
+    Dredd --> Dispatch
 
     style Kai fill:#f59e0b,stroke:#d97706,color:#000
     style Dredd fill:#ef4444,stroke:#dc2626,color:#fff
