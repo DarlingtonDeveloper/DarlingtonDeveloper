@@ -37,5 +37,7 @@
 ---
 
 <p align="center">
-  <a href="https://twitter.com/DarlingtonDev">𝕏</a> · <a href="https://linkedin.com/in/darlingtondev">LinkedIn</a> · <a href="https://darlington.dev">darlington.dev</a>
+  <a href="https://twitter.com/DarlingtonDev"><img src="https://img.shields.io/badge/Twitter-000000?style=flat-square&logo=x&logoColor=white" alt="Twitter" /></a>
+  <a href="https://linkedin.com/in/darlingtondev"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat-square&logo=linkedin&logoColor=white" alt="LinkedIn" /></a>
+  <a href="https://darlington.dev"><img src="https://img.shields.io/badge/darlington.dev-000000?style=flat-square&logo=safari&logoColor=white" alt="Website" /></a>
 </p>
